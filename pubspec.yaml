@@ -10,6 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  #网络请求库
+  dio: ^4.0.4
 
 dev_dependencies:
   flutter_test:
