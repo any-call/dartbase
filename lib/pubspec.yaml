@@ -2,7 +2,6 @@ name: dartbase
 description: A new Flutter project.
 version: 0.0.1
 author: luis<156711203@qq.com>
-homepage:
 
 environment:
   sdk: '>=2.19.0-146.2.beta <3.0.0'
