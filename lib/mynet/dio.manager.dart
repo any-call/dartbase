@@ -14,7 +14,6 @@ typedef Decode<T> = T Function(dynamic);
 
 class DioManager {
   late Dio _dio;
-  String _baseUrl = "http://43.227.112.121:18081";
 
   DioManager() {
     _dio = Dio(configBaseOptions());
@@ -185,7 +184,6 @@ class DioManager {
     return BaseOptions(
         connectTimeout: HttpCode.TIME_OUT,
         receiveTimeout: HttpCode.TIME_OUT,
-        baseUrl: _baseUrl,
         responseType: ResponseType.json);
   }
 
@@ -247,12 +245,4 @@ class DioManager {
 
   //是否显示log 日志
   bool isShowLog() => false;
-
-  String get baseUrl {
-    return _baseUrl;
-  }
-
-  set baseUrl(String url) {
-    _baseUrl = url;
-  }
 }
