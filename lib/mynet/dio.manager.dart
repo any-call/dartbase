@@ -1,61 +1,60 @@
 import 'package:dio/dio.dart';
 
-import 'base.dart';
 import 'base.exception.dart';
 
 enum Method { GET, POST, PUT, DELETE, PATH }
 
-///网络请求管理类抽象屋
-///负责执行网络请求的通用逻辑
+class MyDio {
+  static late Dio _dio;
 
-DioManager _instance = DioManager();
-DioManager getInstance() => _instance;
-typedef Decode<T> = T Function(dynamic);
-
-class DioManager {
-  late Dio _dio;
-
-  DioManager() {
+  MyDio() {
     _dio = Dio(configBaseOptions());
     configDio();
   }
 
   //通用请求
   Future doGet(String url,
-      {Map<String, dynamic>? params, Options? options, token}) async {
-    return requestHttp(url, Method.GET,
-        params: params, options: options, cancelToken: token);
+      {Map<String, dynamic>? params, Options? options}) async {
+    return _requestHttp(url, Method.GET, params: params, options: options);
   }
 
-  Future requestHttp(String url, Method method,
+  Future doPost(String url,
+      {Map<String, dynamic>? params, Options? options}) async {
+    return _requestHttp(url, Method.POST, params: params, options: options);
+  }
+
+  Future doPut(String url,
+      {Map<String, dynamic>? params, Options? options}) async {
+    return _requestHttp(url, Method.PUT, params: params, options: options);
+  }
+
+  Future doPatch(String url,
+      {Map<String, dynamic>? params, Options? options}) async {
+    return _requestHttp(url, Method.PATH, params: params, options: options);
+  }
+
+  Future _requestHttp(String url, Method method,
       {Map<String, dynamic>? params,
       Map<String, dynamic>? headers,
       String mediaType = 'application/json;charset=utf-8',
-      options,
-      cancelToken}) {
+      options}) {
     final methodName = method.toString().split('.')[1];
     if (method == Method.GET) {
-      return request(
+      return _request(
         url,
         methodName,
         params: params,
         header: headers,
         mediaType: mediaType,
-        cancelToken: cancelToken,
         options: options,
       );
     }
 
-    return request(url, methodName,
-        body: params,
-        header: headers,
-        mediaType: mediaType,
-        cancelToken: cancelToken,
-        options: options);
+    return _request(url, methodName,
+        body: params, header: headers, mediaType: mediaType, options: options);
   }
 
-  //R是返回类型，T是数据类型
-  Future request(
+  Future _request(
     String url,
     String method, {
     Map<String, dynamic>? params,
@@ -63,7 +62,6 @@ class DioManager {
     Map<String, dynamic>? header,
     String mediaType = 'application/json; charset=utf-8',
     Options? options,
-    cancelToken,
   }) async {
     Response response;
 
