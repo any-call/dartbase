@@ -4,11 +4,14 @@ import 'base.exception.dart';
 
 enum Method { GET, POST, PUT, DELETE, PATH }
 
+typedef BaseOptionsFunc = BaseOptions Function();
+
 class MyDio {
-  static late Dio _dio;
+  late Dio _dio;
+  BaseOptionsFunc? baseOptionsFunc = _configBaseOptions;
 
   MyDio() {
-    _dio = Dio(configBaseOptions());
+    _dio = Dio(baseOptionsFunc!());
     configDio();
   }
 
@@ -79,13 +82,11 @@ class MyDio {
         queryParameters: params,
       );
     } on DioError catch (error) {
-      if (isShowLog()) printParams(params ?? body ?? {}, url, header, null);
       print("---------- net error $error");
       throw getHttpErrorResult(error);
     }
 
-    ///打印日志
-    if (isShowLog()) printParams(params ?? body ?? {}, url, header, response);
+    //说明网络有数据
     dynamic data;
     //优先解析请求是否出错
     if (!isSuccess(response)) {
@@ -122,73 +123,10 @@ class MyDio {
     }
   }
 
-  //参数打印
-  void printParams(Map<String, dynamic> params, url, headers, response) {
-    print("------ url:$url");
-    print("------ headers:$headers");
-
-    final pms = params.toString();
-    final len = pms.length;
-    final res = response == null ? "" : response.data?.toString() ?? "";
-    try {
-      if (len > 100) {
-        int startIndex = 0;
-        int endIndex = 100;
-        while (true) {
-          print("---------- params: ${pms.substring(startIndex, endIndex)}");
-          if (endIndex == pms.length) {
-            break;
-          }
-          startIndex = endIndex;
-          endIndex += 100;
-          if (endIndex > pms.length) {
-            endIndex = pms.length;
-          }
-        }
-      } else {
-        print("---------- params: $pms");
-      }
-    } catch (e) {
-      print("---------- printLog()打印参数异常----");
-    }
-
-    try {
-      int length = 1500;
-      final len = res.length;
-      if (len > length) {
-        int startIndex = 0;
-        int endIndex = length;
-        while (true) {
-          print("------------response: ${res.substring(startIndex, endIndex)}");
-          if (endIndex == res.length) {
-            break;
-          }
-          startIndex = endIndex;
-          endIndex += length;
-          if (endIndex > res.length) {
-            endIndex = res.length;
-          }
-        }
-      } else {
-        print("------------response: $res");
-      }
-    } catch (e) {
-      print("---------- printLog()打印response异常----");
-    }
-  }
-
-  //初始化dio 参数
-  BaseOptions configBaseOptions() {
-    return BaseOptions(
-        connectTimeout: HttpCode.TIME_OUT,
-        receiveTimeout: HttpCode.TIME_OUT,
-        responseType: ResponseType.json);
-  }
-
   //dio 配制
   void configDio() {
-    _dio.interceptors.add(LogInterceptor(
-        requestBody: isShowLog(), responseBody: isShowLog())); //是否开启请求日志
+    _dio.interceptors
+        .add(LogInterceptor(requestBody: true, responseBody: false)); //是否开启请求日志
   }
 
   //判断业务层的返回成功还是失败，失败后报错，成功后进行数据解析
@@ -240,7 +178,12 @@ class MyDio {
   //业务逻辑报错映射
   NetWorkException getBusinessErrorResult<T>(int code, String error, T data) =>
       NetWorkException(code, error, data: data);
+}
 
-  //是否显示log 日志
-  bool isShowLog() => false;
+//初始化dio 参数
+BaseOptions _configBaseOptions() {
+  return BaseOptions(
+      connectTimeout: HttpCode.TIME_OUT,
+      receiveTimeout: HttpCode.TIME_OUT,
+      responseType: ResponseType.json);
 }
