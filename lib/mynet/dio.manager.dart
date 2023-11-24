@@ -1,16 +1,20 @@
-import 'package:dartbase/mynet/base.dart';
-import 'package:dartbase/mynet/base.exception.dart';
 import 'package:dio/dio.dart';
+
+import 'base.dart';
+import 'base.exception.dart';
+
+enum Method { GET, POST, PUT, DELETE, PATH }
 
 ///网络请求管理类抽象屋
 ///负责执行网络请求的通用逻辑
 
 DioManager _instance = DioManager();
 DioManager getInstance() => _instance;
+typedef Decode<T> = T Function(dynamic);
 
 class DioManager {
   late Dio _dio;
-  String _baseUrl = "";
+  String _baseUrl = "http://43.227.112.121:18081";
 
   DioManager() {
     _dio = Dio(configBaseOptions());
@@ -18,25 +22,18 @@ class DioManager {
   }
 
   //通用请求
-  Future<T> doReq<T>(String url, Method method,
+  Future doGet(String url,
       {Map<String, dynamic>? params, Options? options, token}) async {
-    return requestHttp<T>(url, method,
-        params: params,
-        options: options,
-        cancelToken: token,
-        decode: this.decode);
+    return requestHttp(url, Method.GET,
+        params: params, options: options, cancelToken: token);
   }
 
-  Future<R> requestHttp<R>(
-    String url,
-    Method method, {
-    Map<String, dynamic>? params,
-    Map<String, dynamic>? headers,
-    String mediaType = 'application/json;charset=utf-8',
-    options,
-    cancelToken,
-    required R? decode(dynamic json),
-  }) {
+  Future requestHttp(String url, Method method,
+      {Map<String, dynamic>? params,
+      Map<String, dynamic>? headers,
+      String mediaType = 'application/json;charset=utf-8',
+      options,
+      cancelToken}) {
     final methodName = method.toString().split('.')[1];
     if (method == Method.GET) {
       return request(
@@ -47,7 +44,6 @@ class DioManager {
         mediaType: mediaType,
         cancelToken: cancelToken,
         options: options,
-        decode: decode,
       );
     }
 
@@ -56,12 +52,11 @@ class DioManager {
         header: headers,
         mediaType: mediaType,
         cancelToken: cancelToken,
-        options: options,
-        decode: decode);
+        options: options);
   }
 
   //R是返回类型，T是数据类型
-  Future<R> request<R>(
+  Future request(
     String url,
     String method, {
     Map<String, dynamic>? params,
@@ -70,7 +65,6 @@ class DioManager {
     String mediaType = 'application/json; charset=utf-8',
     Options? options,
     cancelToken,
-    required R? decode(dynamic json),
   }) async {
     Response response;
 
@@ -98,19 +92,18 @@ class DioManager {
     dynamic data;
     //优先解析请求是否出错
     if (!isSuccess(response)) {
-      handleFailed(response, data, decode);
+      handleFailed(response);
     } else {
       //确保请求成功的情况下，再实例化数据
-      data = handleSuccess<R>(data, decode, response);
+      data = handleSuccess(response);
     }
     return data;
   }
 
   //成功数据处理
-  R handleSuccess<R>(data, decode(dynamic json), Response<dynamic> response) {
+  dynamic handleSuccess(Response<dynamic> response) {
     try {
-      data = decode(response.data['data']);
-      return data as R;
+      return response.data['data'];
     } catch (e) {
       throw getBusinessErrorResult(
           HttpCode.PARSE_JSON_ERROR, "json parse error 0 ~ $e", null);
@@ -118,18 +111,14 @@ class DioManager {
   }
 
   //失败数据处理
-  handleFailed(Response<dynamic> response, data, decode(dynamic json)) {
+  dynamic handleFailed(Response<dynamic> response) {
     if (response.data is Map && response.data["data"] != null) {
       try {
-        data = decode(response.data["data"]);
+        return response.data["data"];
       } catch (e) {
         throw getBusinessErrorResult(
             HttpCode.PARSE_JSON_ERROR, 'json parse error :$e', null);
       }
-
-      //抛出含有数据的error
-      throw getBusinessErrorResult(
-          getCode(response), getMessage(response), data);
     } else {
       throw getBusinessErrorResult(
           getCode(response), getMessage(response), null);
@@ -189,19 +178,6 @@ class DioManager {
     } catch (e) {
       print("---------- printLog()打印response异常----");
     }
-  }
-
-  //具体的解析逻辑上层实现
-  T? decode<T>(dynamic response) {
-    T? ret;
-    if (response is Null || response.toString().isEmpty) {
-      return ret;
-    }
-    if (T is BaseModel) {
-      return ((ret as BaseModel).fromJson(response) as T);
-    }
-
-    return ret;
   }
 
   //初始化dio 参数

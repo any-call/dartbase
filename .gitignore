@@ -12,6 +12,7 @@ pubspec.lock
 doc/api/
 .idea/
 .metadata
+lib/.DS_Store
 # dotenv environment variables file
 .env*
 

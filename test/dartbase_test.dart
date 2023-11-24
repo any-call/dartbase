@@ -1,16 +1,28 @@
-import 'package:dartbase/mynet/base.exception.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test("test doReq", () {
-    final aa = NetWorkException(10, 'this is test');
-    print("aa is $aa");
-  });
+  // const url = "http://43.227.112.121:18081/api/site/sync";
+  // getInstance()
+  //     .doReq(url, Method.GET)
+  //     .then((value) => {print("enter then $value")})
+  //     .whenComplete(() => {print("complete")})
+  //     .catchError((onError) => {print("en exception ")});
 
-  // test('adds one to input values', () {
-  //   final calculator = Calculator();
-  //   expect(calculator.addOne(2), 3);
-  //   expect(calculator.addOne(-7), -6);
-  //   expect(calculator.addOne(0), 1);
-  // });
+  Future.wait([
+    Future.delayed(Duration(seconds: 2), () {
+      return "hello";
+    }),
+    Future.delayed(Duration(seconds: 10), () {
+      return "world";
+    }),
+  ]).then((value) {
+    //执行结果
+    print("result is $value");
+  }).catchError((e) {
+    print("catch error :$e");
+  }).whenComplete(() {
+    print('run complete');
+  })
+
+  print("ret over");
 }

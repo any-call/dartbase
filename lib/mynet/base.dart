@@ -1,9 +1,3 @@
-//定义两个模型 必须实现的函数定义
-abstract class BaseModel {
-  BaseModel fromJson(Map<String, dynamic> json);
-  Map<String, dynamic> toJson();
-}
-
 ///错误编码
 class HttpCode {
   ///未知网络错误
@@ -29,5 +23,3 @@ class HttpCode {
   ///超时时长
   static const TIME_OUT = 15000;
 }
-
-enum Method { GET, POST, PUT, DELETE, PATH }
