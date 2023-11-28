@@ -1,27 +1,40 @@
 /// 网络异常类
-class HttpCode {
+class MyHttpCode {
   ///未知网络错误
-  static const UNKNOWN_NET_ERROR = 10086;
+  final int errUnknown;
 
   ///网络错误
-  static const NETWORK_ERROR = -1001;
+  final int errNet;
 
   ///网络超时
-  static const CONNECT_TIMEOUT = -1002;
-  static const SEND_TIMEOUT = -1003;
-  static const RECEIVE_TIMEOUT = -1004;
+  final int errConnTimeout;
+  final int errSendTimeout;
+  final int errReceTimeout;
 
   ///请求取消
-  static const REQUEST_CANCEL = -1005;
+  final int errReqCancel;
 
   ///JSON解析异常
-  static const PARSE_JSON_ERROR = -1006;
+  final int errParseJson;
 
-  ///成功的Code
-  static const SUCCESS = 0;
+  ///数据相关key
+  final String respKeyCode;
+  final String respKeyMsg;
+  final String respKeyData;
+  final int respSuccessCode;
 
-  ///超时时长
-  static const TIME_OUT = 15000;
+  const MyHttpCode(
+      {this.errUnknown = -1000,
+      this.errNet = -1001,
+      this.errConnTimeout = -1002,
+      this.errSendTimeout = -1003,
+      this.errReceTimeout = -1004,
+      this.errReqCancel = -1005,
+      this.errParseJson = -1006,
+      this.respKeyCode = "code",
+      this.respKeyMsg = "message",
+      this.respKeyData = "data",
+      this.respSuccessCode = 0});
 }
 
 class NetWorkException<T> implements Exception {

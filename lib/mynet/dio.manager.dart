@@ -5,14 +5,24 @@ import 'base.exception.dart';
 enum Method { GET, POST, PUT, DELETE, PATH }
 
 typedef BaseOptionsFunc = BaseOptions Function();
+typedef BaseDataHandleFunc = dynamic Function(
+    Response response, MyHttpCode codeDef);
+typedef ConfigDioFunc = void Function(Dio dio);
 
 class MyDio {
   late Dio _dio;
-  BaseOptionsFunc? baseOptionsFunc = _configBaseOptions;
+  BaseOptionsFunc baseOptionsFunc;
+  BaseDataHandleFunc baseDataHandleFunc;
+  ConfigDioFunc baseConfigFunc;
+  MyHttpCode myHttpCode;
 
-  MyDio() {
-    _dio = Dio(baseOptionsFunc!());
-    configDio();
+  MyDio(
+      {this.baseOptionsFunc = defaultConfigBaseOptions,
+      this.baseDataHandleFunc = defaultHandleData,
+      this.baseConfigFunc = defaultConfigDio,
+      this.myHttpCode = const MyHttpCode()}) {
+    _dio = Dio(baseOptionsFunc());
+    this.baseConfigFunc(_dio);
   }
 
   //通用请求
@@ -86,66 +96,8 @@ class MyDio {
       throw getHttpErrorResult(error);
     }
 
-    //说明网络有数据
-    dynamic data;
-    //优先解析请求是否出错
-    if (!isSuccess(response)) {
-      handleFailed(response);
-    } else {
-      //确保请求成功的情况下，再实例化数据
-      data = handleSuccess(response);
-    }
-    return data;
-  }
-
-  //成功数据处理
-  dynamic handleSuccess(Response<dynamic> response) {
-    try {
-      return response.data['data'];
-    } catch (e) {
-      throw getBusinessErrorResult(
-          HttpCode.PARSE_JSON_ERROR, "json parse error 0 ~ $e", null);
-    }
-  }
-
-  //失败数据处理
-  dynamic handleFailed(Response<dynamic> response) {
-    if (response.data is Map && response.data["data"] != null) {
-      try {
-        return response.data["data"];
-      } catch (e) {
-        throw getBusinessErrorResult(
-            HttpCode.PARSE_JSON_ERROR, 'json parse error :$e', null);
-      }
-    } else {
-      throw getBusinessErrorResult(
-          getCode(response), getMessage(response), null);
-    }
-  }
-
-  //dio 配制
-  void configDio() {
-    _dio.interceptors
-        .add(LogInterceptor(requestBody: true, responseBody: false)); //是否开启请求日志
-  }
-
-  //判断业务层的返回成功还是失败，失败后报错，成功后进行数据解析
-  bool isSuccess(Response response) {
-    if (response.data["code"] == HttpCode.SUCCESS) {
-      return true;
-    }
-
-    return false;
-  }
-
-  //若服务器返回的code key不同，重定该方法
-  int getCode(Response response) {
-    return response.data["code"];
-  }
-
-  //若服务器返回的message key不同，重定该方法
-  String getMessage(Response response) {
-    return response.data["message"];
+    //数据处理
+    return baseDataHandleFunc(response, MyHttpCode());
   }
 
   //Http层网络请求错误翻译
@@ -158,32 +110,49 @@ class MyDio {
     }
     if (e.type == DioErrorType.connectTimeout) {
       statusMessage = "连接超时";
-      statusCode = HttpCode.CONNECT_TIMEOUT;
+      statusCode = myHttpCode.errConnTimeout;
     } else if (e.type == DioErrorType.sendTimeout) {
       statusMessage = "请求超时";
-      statusCode = HttpCode.SEND_TIMEOUT;
+      statusCode = myHttpCode.errSendTimeout;
     } else if (e.type == DioErrorType.receiveTimeout) {
       statusMessage = "响应超时";
-      statusCode = HttpCode.RECEIVE_TIMEOUT;
+      statusCode = myHttpCode.errReceTimeout;
     } else if (e.type == DioErrorType.cancel) {
       statusMessage = "请求取消";
-      statusCode = HttpCode.REQUEST_CANCEL;
+      statusCode = myHttpCode.errReqCancel;
     } else {
       statusMessage = "未知错误";
-      statusCode = HttpCode.UNKNOWN_NET_ERROR;
+      statusCode = myHttpCode.errUnknown;
     }
     return new NetWorkException(statusCode, statusMessage, data: e);
   }
-
-  //业务逻辑报错映射
-  NetWorkException getBusinessErrorResult<T>(int code, String error, T data) =>
-      NetWorkException(code, error, data: data);
 }
 
 //初始化dio 参数
-BaseOptions _configBaseOptions() {
+BaseOptions defaultConfigBaseOptions() {
   return BaseOptions(
-      connectTimeout: HttpCode.TIME_OUT,
-      receiveTimeout: HttpCode.TIME_OUT,
+      connectTimeout: 3000,
+      receiveTimeout: 30000,
       responseType: ResponseType.json);
+}
+
+//处理数据
+dynamic defaultHandleData(Response response, MyHttpCode defCode) {
+  try {
+    int intCode = response.data[defCode.respKeyCode];
+    if (intCode == defCode.respSuccessCode) {
+      //说明是响应成功
+      return response.data[defCode.respKeyData];
+    }
+
+    String strMsg = response.data[defCode.respKeyMsg];
+    throw NetWorkException(intCode, strMsg);
+  } catch (error) {
+    throw NetWorkException(defCode.errParseJson, "parse json err:$error");
+  }
+}
+
+//拦截器，针对 请求，响应，错误的通用处理
+void defaultConfigDio(Dio dio) {
+  dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: false));
 }
