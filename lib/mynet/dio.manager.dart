@@ -15,6 +15,7 @@ class MyDio {
   BaseDataHandleFunc baseDataHandleFunc;
   ConfigDioFunc baseConfigFunc;
   MyHttpCode myHttpCode;
+  static final MyDio _instance = MyDio();
 
   MyDio(
       {this.baseOptionsFunc = defaultConfigBaseOptions,
@@ -25,6 +26,7 @@ class MyDio {
     this.baseConfigFunc(_dio);
   }
 
+  static MyDio get instance => _instance;
   //通用请求
   Future doGet(String url,
       {Map<String, dynamic>? params, Options? options}) async {
