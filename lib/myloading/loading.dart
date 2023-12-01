@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'base.dart';
 
-class Myloading {
+class MyLoading {
   OverlayEntry? _overlayEntry;
-  Myloading();
-  static final Myloading _instance = Myloading();
-  static Myloading get instance => _instance;
+  MyLoading();
+  static final MyLoading _instance = MyLoading();
+  static MyLoading get instance => _instance;
 
   void show(
     BuildContext context, {
