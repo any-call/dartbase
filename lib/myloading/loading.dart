@@ -1,67 +1,33 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import 'base.dart';
 
 class Myloading {
   OverlayEntry? _overlayEntry;
-  Timer? _timer;
   Myloading();
   static final Myloading _instance = Myloading();
   static Myloading get instance => _instance;
 
-  void showSuccess(
-    String message,
+  void show(
     BuildContext context, {
-    int duration = 2500,
+    String message = "loading",
     MyLoadingStyle style = MyLoadingStyle.dark,
-    MyLoadingPosition position = MyLoadingPosition.center,
   }) {
-    _show(style, MyToastType.success, message, context,
-        position: position, duration: duration);
+    _show(style, message, context);
   }
 
-  void showError(
-    String message,
-    BuildContext context, {
-    int duration = 2500,
-    MyLoadingStyle style = MyLoadingStyle.dark,
-    MyLoadingPosition position = MyLoadingPosition.center,
-  }) {
-    _show(style, MyToastType.error, message, context,
-        position: position, duration: duration);
+  void dismiss() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
   }
 
-  void showInfo(
-    String message,
-    BuildContext context, {
-    int duration = 2500,
-    MyLoadingStyle style = MyLoadingStyle.dark,
-    MyLoadingPosition position = MyLoadingPosition.center,
-  }) {
-    _show(style, MyToastType.info, message, context,
-        position: position, duration: duration);
-  }
-
-  void _show(
-    MyLoadingStyle style,
-    MyToastType type,
-    String message,
-    BuildContext context, {
-    int duration = 2500,
-    MyLoadingPosition position = MyLoadingPosition.center,
-  }) {
-    _timer?.cancel();
+  void _show(MyLoadingStyle style, String message, BuildContext context) {
     _overlayEntry?.remove();
     _overlayEntry = OverlayEntry(
       builder: (ctx) {
         return MyloadingAnimation(
-          duration: duration,
-          position: position,
           child: MyloadingBody(
             style: style,
-            type: type,
             message: message,
           ),
         );
@@ -69,23 +35,16 @@ class Myloading {
     );
 
     Overlay.of(context).insert(_overlayEntry!);
-
-    _timer = Timer(Duration(milliseconds: duration), () {
-      _overlayEntry?.remove();
-      _overlayEntry = null;
-    });
   }
 }
 
 class MyloadingBody extends StatelessWidget {
   final MyLoadingStyle style;
-  final MyToastType type;
   final String message;
 
   const MyloadingBody({
     super.key,
     this.style = MyLoadingStyle.light,
-    required this.type,
     required this.message,
   });
 
@@ -93,7 +52,7 @@ class MyloadingBody extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     final Color bgColor, fontColor;
-    final IconData icon;
+    print("this.style : ${this.style}");
     switch (this.style) {
       case MyLoadingStyle.light:
         {
@@ -117,39 +76,30 @@ class MyloadingBody extends StatelessWidget {
         break;
     }
 
-    switch (this.type) {
-      case MyToastType.success:
-        {
-          icon = Icons.done;
-        }
-        break;
-
-      case MyToastType.error:
-        {
-          icon = Icons.clear;
-        }
-        break;
-
-      case MyToastType.info:
-        {
-          icon = Icons.info_outline;
-        }
-        break;
-
-      default:
-        {
-          icon = Icons.info;
-        }
-        break;
-    }
-
     return Container(
-      color: Colors.amberAccent,
-      width: 60,
-      height: 60,
-      padding: EdgeInsets.all(10),
-      child: const CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation(Colors.green),
+      padding: EdgeInsets.fromLTRB(20, 16, 20, 16),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        children: <Widget>[
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation(fontColor),
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          Text(
+            message,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              color: fontColor,
+              decoration: TextDecoration.none, //去掉两个黄色下划线
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -157,16 +107,10 @@ class MyloadingBody extends StatelessWidget {
 
 class MyloadingAnimation extends StatefulWidget {
   final Widget child;
-  final int duration;
   final int transitionDuration;
-  final MyLoadingPosition position;
 
   const MyloadingAnimation(
-      {super.key,
-      required this.child,
-      this.duration = 2500,
-      this.transitionDuration = 300,
-      this.position = MyLoadingPosition.center});
+      {super.key, required this.child, this.transitionDuration = 300});
 
   @override
   State<StatefulWidget> createState() {
@@ -178,8 +122,6 @@ class MyloadingAnimation extends StatefulWidget {
 class _MyloadingAnimationState extends State<MyloadingAnimation>
     with SingleTickerProviderStateMixin {
   late final AnimationController controller;
-  late final Animation<double> animation;
-  Timer? _timer;
 
   @override
   void initState() {
@@ -190,18 +132,11 @@ class _MyloadingAnimationState extends State<MyloadingAnimation>
       vsync: this,
       duration: Duration(milliseconds: widget.transitionDuration),
     )..forward();
-    animation = Tween<double>(begin: -60, end: 60).animate(
-      CurvedAnimation(parent: controller, curve: Curves.easeInOut),
-    );
-
-    final delay = widget.duration - widget.transitionDuration;
-    _timer = Timer(Duration(milliseconds: delay), controller.reverse);
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    _timer?.cancel();
     controller.dispose();
     super.dispose(); // 释放时，请先释放子类，然后再释放根类
   }
@@ -211,31 +146,16 @@ class _MyloadingAnimationState extends State<MyloadingAnimation>
     return AnimatedBuilder(
       animation: controller,
       builder: (BuildContext context, child) {
-        if (widget.position == MyLoadingPosition.center) {
-          return Opacity(
-            opacity: controller.value,
-            child: Column(
-              children: [
-                Expanded(flex: 1, child: Container()),
-                widget.child,
-                Expanded(flex: 1, child: Container()),
-              ],
-            ),
-          );
-        } else {
-          return Positioned(
-              left: 0,
-              right: 0,
-              top: widget.position == MyLoadingPosition.top
-                  ? animation.value
-                  : null,
-              bottom: widget.position == MyLoadingPosition.bottom
-                  ? animation.value
-                  : null,
-              child: Center(
-                child: widget.child,
-              ));
-        }
+        return Opacity(
+          opacity: controller.value,
+          child: Column(
+            children: [
+              Expanded(flex: 1, child: Container()),
+              widget.child,
+              Expanded(flex: 1, child: Container()),
+            ],
+          ),
+        );
       },
     );
   }
