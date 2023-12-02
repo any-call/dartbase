@@ -25,8 +25,13 @@ class MyFile {
   }
 
   ///读取指定文件
-  static Future readFile(String path) {
+  static Future readFileAsBytes(String path) {
     final file = File(path);
     return file.readAsBytes();
+  }
+
+  static Future readFileAsString(String path) {
+    final file = File(path);
+    return file.readAsString();
   }
 }
