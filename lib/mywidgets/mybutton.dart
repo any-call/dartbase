@@ -1,27 +1,70 @@
 import 'package:flutter/material.dart';
 
-class MyButtonEx<T extends ButtonStyleButton> {
-  late T _button;
-  MyButtonEx();
-
-  void setColor(Color color) {
-    if (_button.style == null) {
-      _button.style =
-          ButtonStyle(foregroundColor: MaterialStateProperty.all(color));
-    } else {
-      _button.style?.foregroundColor = MaterialStateProperty.all(color);
-    }
-  }
-
+class MyButtonEx {
   ///OutlinedButton
-  static MyButtonEx<OutlinedButton> outlineButton(
-      {VoidCallback? onPressed, required Widget child}) {
-    final myButton = MyButtonEx<OutlinedButton>();
-    myButton._button = OutlinedButton(onPressed: onPressed, child: child);
-    return myButton;
+  static OutlinedButton outlineButton({
+    Key? key,
+    String label = "",
+    FontStyle? fontStyle,
+    FontWeight? fontWeight,
+    double fontSize = 14,
+    VoidCallback? onPressed,
+    VoidCallback? onLongPress,
+    VoidCallback? onHover,
+    VoidCallback? onFocusChange,
+    Color? foregroundColor,
+    Color? backGroundColor,
+    Color? hoverColor,
+  }) {
+    return OutlinedButton(
+        onPressed: onPressed,
+        style: ButtonStyle(
+          foregroundColor: MaterialStateProperty.all(foregroundColor),
+          backgroundColor: MaterialStateProperty.all(backGroundColor),
+          overlayColor: MaterialStateProperty.all(hoverColor),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontStyle: fontStyle,
+            fontSize: fontSize,
+            fontWeight: fontWeight,
+          ),
+        ));
   }
 
-  T get button {
-    return this._button;
+  ///OutlinedButton.icon
+  static OutlinedButton outlineIconButton(
+    IconData icon, {
+    Key? key,
+    String label = "",
+    FontStyle? fontStyle,
+    FontWeight? fontWeight,
+    double fontSize = 14,
+    VoidCallback? onPressed,
+    VoidCallback? onLongPress,
+    VoidCallback? onHover,
+    VoidCallback? onFocusChange,
+    Color? foregroundColor,
+    Color? backGroundColor,
+    Color? hoverColor,
+  }) {
+    return OutlinedButton.icon(
+      onPressed: onPressed,
+      style: ButtonStyle(
+        foregroundColor: MaterialStateProperty.all(foregroundColor),
+        backgroundColor: MaterialStateProperty.all(backGroundColor),
+        overlayColor: MaterialStateProperty.all(hoverColor),
+      ),
+      label: Text(
+        label,
+        style: TextStyle(
+          fontStyle: fontStyle,
+          fontSize: fontSize,
+          fontWeight: fontWeight,
+        ),
+      ),
+      icon: Icon(icon),
+    );
   }
 }
