@@ -19,7 +19,6 @@ class MyButton extends StatefulWidget {
   final double? fixHeight;
   final Widget? icon;
 
-  T
   MyButton({
     super.key,
     this.text = "",
