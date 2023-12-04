@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
 
+enum MyButtonType {
+  raise,
+  text,
+  icon,
+}
+
 class MyButton extends StatefulWidget {
   final String text;
   final VoidCallback? onPress;
+  final MyButtonType type;
   late Color? _foregroundColor;
   late Color? _backGroundColor;
 
-  MyButton({super.key, this.text = "", this.onPress});
+  MyButton(
+      {super.key,
+      this.text = "",
+      this.type = MyButtonType.raise,
+      this.onPress});
 
   MyButton setForegroundColor(Color color) {
     _foregroundColor = color;
@@ -28,8 +39,24 @@ class MyButton extends StatefulWidget {
 class _MyButtonState extends State<MyButton> {
   @override
   Widget build(BuildContext context) {
-    // return ElevatedButton(onPressed: onPressed, child: child)
-    print(" run 1204...003");
+    print(" run 1204...004");
+
+    if (widget.type == MyButtonType.raise) {
+      return ElevatedButton(
+        onPressed: widget.onPress,
+        style: ButtonStyle(
+          foregroundColor: MaterialStateProperty.all(widget._foregroundColor),
+          backgroundColor: MaterialStateProperty.all(widget._backGroundColor),
+        ),
+        child: Text(
+          widget.text,
+          style: TextStyle(
+              color: widget._foregroundColor,
+              backgroundColor: widget._backGroundColor),
+        ),
+      );
+    }
+
     return TextButton(
       onPressed: widget.onPress,
       child: Text(
