@@ -42,7 +42,7 @@ class MyButton extends StatefulWidget {
 }
 
 class _MyButtonState extends State<MyButton> {
-  late Text? _child;
+  Text? _child;
   Text get child {
     if (this._child == null) {
       _child = Text(
