@@ -2,44 +2,33 @@ import 'package:flutter/material.dart';
 
 enum MyButtonType {
   raise,
+  border,
   text,
-  icon,
 }
 
 class MyButton extends StatefulWidget {
   final String text;
   final VoidCallback? onPress;
   final MyButtonType type;
-  Color? _foregroundColor;
-  Color? _backGroundColor;
-  double? _fontSize;
-  FontStyle? _fontStyle;
+  final Color? foregroundColor;
+  final Color? backGroundColor;
+  final double? fontSize;
+  final FontStyle? fontStyle;
+  final double? fixWidth;
+  final double? fixHeight;
 
-  MyButton(
-      {super.key,
-      this.text = "",
-      this.type = MyButtonType.raise,
-      this.onPress});
-
-  MyButton setForegroundColor(Color color) {
-    _foregroundColor = color;
-    return this;
-  }
-
-  MyButton setBackgroundColor(Color color) {
-    _backGroundColor = color;
-    return this;
-  }
-
-  MyButton setFontSize(double size) {
-    _fontSize = size;
-    return this;
-  }
-
-  MyButton setFontStyle(FontStyle fontStyle) {
-    _fontStyle = fontStyle;
-    return this;
-  }
+  MyButton({
+    super.key,
+    this.text = "",
+    this.type = MyButtonType.raise,
+    this.onPress,
+    this.foregroundColor,
+    this.backGroundColor,
+    this.fontSize,
+    this.fontStyle,
+    this.fixWidth,
+    this.fixHeight,
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -52,32 +41,81 @@ class _MyButtonState extends State<MyButton> {
   @override
   Widget build(BuildContext context) {
     print(" run 1204...014");
+    final Widget button;
+    switch (widget.type) {
+      case MyButtonType.raise:
+        {
+          button = ElevatedButton(
+            onPressed: widget.onPress,
+            style: ButtonStyle(
+              foregroundColor:
+                  MaterialStateProperty.all(widget.foregroundColor),
+              backgroundColor:
+                  MaterialStateProperty.all(widget.backGroundColor),
+            ),
+            child: Text(
+              widget.text,
+              style: TextStyle(
+                fontSize: widget.fontSize,
+                fontStyle: widget.fontStyle,
+              ),
+            ),
+          );
+        }
+        break;
 
-    if (widget.type == MyButtonType.raise) {
-      return ElevatedButton(
-        onPressed: widget.onPress,
-        style: ButtonStyle(
-          foregroundColor: MaterialStateProperty.all(widget._foregroundColor),
-          backgroundColor: MaterialStateProperty.all(widget._backGroundColor),
-        ),
-        child: Text(
-          widget.text,
-          style: TextStyle(
-            fontSize: widget._fontSize,
-            fontStyle: widget._fontStyle ?? FontStyle.normal,
-          ),
-        ),
-      );
+      case MyButtonType.border:
+        {
+          button = OutlinedButton(
+            onPressed: widget.onPress,
+            style: ButtonStyle(
+              foregroundColor:
+                  MaterialStateProperty.all(widget.foregroundColor),
+              backgroundColor:
+                  MaterialStateProperty.all(widget.backGroundColor),
+            ),
+            child: Text(
+              widget.text,
+              style: TextStyle(
+                fontSize: widget.fontSize,
+                fontStyle: widget.fontStyle,
+              ),
+            ),
+          );
+        }
+        break;
+
+      default: //TextButton
+        {
+          button = TextButton(
+            onPressed: widget.onPress,
+            style: ButtonStyle(
+              foregroundColor:
+                  MaterialStateProperty.all(widget.foregroundColor),
+              backgroundColor:
+                  MaterialStateProperty.all(widget.backGroundColor),
+            ),
+            child: Text(
+              widget.text,
+              style: TextStyle(
+                fontSize: widget.fontSize,
+                fontStyle: widget.fontStyle,
+              ),
+            ),
+          );
+        }
+        break;
     }
 
-    return TextButton(
-      onPressed: widget.onPress,
-      child: Text(
-        widget.text,
-        style: TextStyle(
-            backgroundColor: widget._backGroundColor,
-            color: widget._foregroundColor),
-      ),
-    );
+    if (widget.fixHeight != null && widget.fixWidth != null) {
+      return Container(
+          width: widget.fixWidth, height: widget.fixHeight, child: button);
+    } else if (widget.fixHeight != null) {
+      return Container(height: widget.fixHeight, child: button);
+    } else if (widget.fixWidth != null) {
+      return Container(width: widget.fixWidth, child: button);
+    }
+
+    return button;
   }
 }
