@@ -3,10 +3,18 @@ import 'package:flutter/material.dart';
 class MyButton extends StatefulWidget {
   final String text;
   final VoidCallback? onPress;
-  late Color foregroundColor;
-  late Color backGroundColor;
+  late Color? _foregroundColor;
+  late Color? _backGroundColor;
 
   MyButton({super.key, this.text = "", this.onPress});
+
+  set foregroundColor(Color color) {
+    _foregroundColor = color;
+  }
+
+  set backgroundColr(Color color) {
+    _backGroundColor = color;
+  }
 
   @override
   State<StatefulWidget> createState() {
@@ -19,14 +27,14 @@ class _MyButtonState extends State<MyButton> {
   @override
   Widget build(BuildContext context) {
     // return ElevatedButton(onPressed: onPressed, child: child)
-    print(" run 1204...001");
+    print(" run 1204...002");
     return TextButton(
       onPressed: widget.onPress,
       child: Text(
         widget.text,
         style: TextStyle(
-            backgroundColor: widget.backGroundColor,
-            color: widget.foregroundColor),
+            backgroundColor: widget._backGroundColor,
+            color: widget._foregroundColor),
       ),
     );
   }
