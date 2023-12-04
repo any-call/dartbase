@@ -12,7 +12,7 @@ class MyButton extends StatefulWidget {
   final MyButtonType type;
   late Color? _foregroundColor;
   late Color? _backGroundColor;
-  late double _fontSize;
+  late double? _fontSize;
   late FontStyle? _fontStyle;
 
   MyButton(
