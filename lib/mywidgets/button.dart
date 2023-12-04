@@ -8,12 +8,14 @@ class MyButton extends StatefulWidget {
 
   MyButton({super.key, this.text = "", this.onPress});
 
-  set foregroundColor(Color color) {
+  MyButton setForegroundColor(Color color) {
     _foregroundColor = color;
+    return this;
   }
 
-  set backgroundColr(Color color) {
+  MyButton setBackgroundColor(Color color) {
     _backGroundColor = color;
+    return this;
   }
 
   @override
@@ -27,7 +29,7 @@ class _MyButtonState extends State<MyButton> {
   @override
   Widget build(BuildContext context) {
     // return ElevatedButton(onPressed: onPressed, child: child)
-    print(" run 1204...002");
+    print(" run 1204...003");
     return TextButton(
       onPressed: widget.onPress,
       child: Text(
