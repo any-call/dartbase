@@ -10,10 +10,10 @@ class MyButton extends StatefulWidget {
   final String text;
   final VoidCallback? onPress;
   final MyButtonType type;
-  late Color? _foregroundColor;
-  late Color? _backGroundColor;
-  late double? _fontSize;
-  late FontStyle? _fontStyle;
+  Color? _foregroundColor;
+  Color? _backGroundColor;
+  double? _fontSize;
+  FontStyle? _fontStyle;
 
   MyButton(
       {super.key,
@@ -51,7 +51,7 @@ class MyButton extends StatefulWidget {
 class _MyButtonState extends State<MyButton> {
   @override
   Widget build(BuildContext context) {
-    print(" run 1204...011");
+    print(" run 1204...012");
 
     if (widget.type == MyButtonType.raise) {
       return ElevatedButton(
