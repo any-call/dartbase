@@ -31,6 +31,16 @@ class MyButton extends StatefulWidget {
     return this;
   }
 
+  MyButton setFontSize(double size) {
+    _fontSize = size;
+    return this;
+  }
+
+  MyButton setFontStyle(FontStyle fontStyle) {
+    _fontStyle = fontStyle;
+    return this;
+  }
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -41,7 +51,7 @@ class MyButton extends StatefulWidget {
 class _MyButtonState extends State<MyButton> {
   @override
   Widget build(BuildContext context) {
-    print(" run 1204...007");
+    print(" run 1204...008");
 
     if (widget.type == MyButtonType.raise) {
       return ElevatedButton(
@@ -52,10 +62,10 @@ class _MyButtonState extends State<MyButton> {
         ),
         child: Text(
           widget.text,
-          // style: TextStyle(
-          //   fontSize: widget._fontSize ?? 14,
-          //   fontStyle: widget._fontStyle ?? FontStyle.normal,
-          // ),
+          style: TextStyle(
+            fontSize: widget._fontSize,
+            fontStyle: widget._fontStyle,
+          ),
         ),
       );
     }
