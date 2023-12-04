@@ -41,7 +41,7 @@ class MyButton extends StatefulWidget {
 class _MyButtonState extends State<MyButton> {
   @override
   Widget build(BuildContext context) {
-    print(" run 1204...005");
+    print(" run 1204...006");
 
     if (widget.type == MyButtonType.raise) {
       return ElevatedButton(
@@ -53,8 +53,8 @@ class _MyButtonState extends State<MyButton> {
         child: Text(
           widget.text,
           style: TextStyle(
-            fontSize: widget._fontSize,
-            fontStyle: widget._fontStyle,
+            fontSize: widget._fontSize ?? 14,
+            fontStyle: widget._fontStyle ?? FontStyle.normal,
           ),
         ),
       );
