@@ -6,10 +6,6 @@ enum MyButtonType {
   text,
 }
 
-class MyButtonRaise extends ElevatedButton {
-  MyButtonRaise({required super.onPressed, required super.child});
-}
-
 class MyButton extends StatefulWidget {
   final String text;
   final VoidCallback? onPress;
@@ -21,7 +17,9 @@ class MyButton extends StatefulWidget {
   final FontStyle? fontStyle;
   final double? fixWidth;
   final double? fixHeight;
+  final Widget? icon;
 
+  T
   MyButton({
     super.key,
     this.text = "",
@@ -34,6 +32,7 @@ class MyButton extends StatefulWidget {
     this.fontStyle,
     this.fixWidth,
     this.fixHeight,
+    this.icon,
   });
 
   @override
@@ -44,6 +43,20 @@ class MyButton extends StatefulWidget {
 }
 
 class _MyButtonState extends State<MyButton> {
+  late Text? _child;
+  Text get child {
+    if (this._child == null) {
+      _child = Text(
+        widget.text,
+        style: TextStyle(
+          fontSize: widget.fontSize,
+          fontStyle: widget.fontStyle,
+        ),
+      );
+    }
+    return _child!;
+  }
+
   @override
   Widget build(BuildContext context) {
     print(" run 1204...014");
@@ -51,45 +64,47 @@ class _MyButtonState extends State<MyButton> {
     switch (widget.type) {
       case MyButtonType.raise:
         {
-          button = ElevatedButton(
-            onPressed: widget.onPress,
-            style: ButtonStyle(
-              foregroundColor:
-                  MaterialStateProperty.all(widget.foregroundColor),
-              backgroundColor:
-                  MaterialStateProperty.all(widget.backGroundColor),
-              overlayColor: MaterialStateProperty.all(widget.hoverColor),
-            ),
-            child: Text(
-              widget.text,
-              style: TextStyle(
-                fontSize: widget.fontSize,
-                fontStyle: widget.fontStyle,
+          if (widget.icon != null) {
+            button = ElevatedButton.icon(
+                onPressed: widget.onPress,
+                icon: widget.icon!,
+                label: this.child);
+          } else {
+            button = ElevatedButton(
+              onPressed: widget.onPress,
+              style: ButtonStyle(
+                foregroundColor:
+                    MaterialStateProperty.all(widget.foregroundColor),
+                backgroundColor:
+                    MaterialStateProperty.all(widget.backGroundColor),
+                overlayColor: MaterialStateProperty.all(widget.hoverColor),
               ),
-            ),
-          );
+              child: this.child,
+            );
+          }
         }
         break;
 
       case MyButtonType.border:
         {
-          button = OutlinedButton(
-            onPressed: widget.onPress,
-            style: ButtonStyle(
-              foregroundColor:
-                  MaterialStateProperty.all(widget.foregroundColor),
-              backgroundColor:
-                  MaterialStateProperty.all(widget.backGroundColor),
-              overlayColor: MaterialStateProperty.all(widget.hoverColor),
-            ),
-            child: Text(
-              widget.text,
-              style: TextStyle(
-                fontSize: widget.fontSize,
-                fontStyle: widget.fontStyle,
+          if (widget.icon != null) {
+            button = OutlinedButton.icon(
+                onPressed: widget.onPress,
+                icon: widget.icon!,
+                label: this.child);
+          } else {
+            button = OutlinedButton(
+              onPressed: widget.onPress,
+              style: ButtonStyle(
+                foregroundColor:
+                    MaterialStateProperty.all(widget.foregroundColor),
+                backgroundColor:
+                    MaterialStateProperty.all(widget.backGroundColor),
+                overlayColor: MaterialStateProperty.all(widget.hoverColor),
               ),
-            ),
-          );
+              child: this.child,
+            );
+          }
         }
         break;
 
@@ -104,13 +119,7 @@ class _MyButtonState extends State<MyButton> {
                   MaterialStateProperty.all(widget.backGroundColor),
               overlayColor: MaterialStateProperty.all(widget.hoverColor),
             ),
-            child: Text(
-              widget.text,
-              style: TextStyle(
-                fontSize: widget.fontSize,
-                fontStyle: widget.fontStyle,
-              ),
-            ),
+            child: this.child,
           );
         }
         break;
