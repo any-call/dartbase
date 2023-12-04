@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class MyButtonEx {
+class MyButton {
   ///OutlinedButton
   static OutlinedButton outlineButton({
     Key? key,
