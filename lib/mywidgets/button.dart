@@ -6,12 +6,17 @@ enum MyButtonType {
   text,
 }
 
+class MyButtonRaise extends ElevatedButton {
+  MyButtonRaise({required super.onPressed, required super.child});
+}
+
 class MyButton extends StatefulWidget {
   final String text;
   final VoidCallback? onPress;
   final MyButtonType type;
   final Color? foregroundColor;
   final Color? backGroundColor;
+  final Color? hoverColor;
   final double? fontSize;
   final FontStyle? fontStyle;
   final double? fixWidth;
@@ -24,6 +29,7 @@ class MyButton extends StatefulWidget {
     this.onPress,
     this.foregroundColor,
     this.backGroundColor,
+    this.hoverColor,
     this.fontSize,
     this.fontStyle,
     this.fixWidth,
@@ -52,6 +58,7 @@ class _MyButtonState extends State<MyButton> {
                   MaterialStateProperty.all(widget.foregroundColor),
               backgroundColor:
                   MaterialStateProperty.all(widget.backGroundColor),
+              overlayColor: MaterialStateProperty.all(widget.hoverColor),
             ),
             child: Text(
               widget.text,
@@ -73,6 +80,7 @@ class _MyButtonState extends State<MyButton> {
                   MaterialStateProperty.all(widget.foregroundColor),
               backgroundColor:
                   MaterialStateProperty.all(widget.backGroundColor),
+              overlayColor: MaterialStateProperty.all(widget.hoverColor),
             ),
             child: Text(
               widget.text,
@@ -94,6 +102,7 @@ class _MyButtonState extends State<MyButton> {
                   MaterialStateProperty.all(widget.foregroundColor),
               backgroundColor:
                   MaterialStateProperty.all(widget.backGroundColor),
+              overlayColor: MaterialStateProperty.all(widget.hoverColor),
             ),
             child: Text(
               widget.text,
