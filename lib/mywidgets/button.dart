@@ -18,12 +18,16 @@ class MyButton extends StatefulWidget {
 class _MyButtonState extends State<MyButton> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     // return ElevatedButton(onPressed: onPressed, child: child)
-
+    print(" run 1204...001");
     return TextButton(
       onPressed: widget.onPress,
-      child: Text(widget.text),
+      child: Text(
+        widget.text,
+        style: TextStyle(
+            backgroundColor: widget.backGroundColor,
+            color: widget.foregroundColor),
+      ),
     );
   }
 }
