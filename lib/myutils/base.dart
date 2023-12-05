@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'dart:ffi';
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:ffi/ffi.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,7 @@ class MyUtils {
   }
 
   ///获取屏幕幕大小
-  static Size getScreenSize(BuildContext context) {
+  static ui.Size getScreenSize(BuildContext context) {
     return MediaQuery.of(context).size;
   }
 
