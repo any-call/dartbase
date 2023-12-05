@@ -1,6 +1,8 @@
 import 'dart:core';
+import 'dart:ffi';
 import 'dart:io';
 
+import 'package:ffi/ffi.dart';
 import 'package:flutter/material.dart';
 
 enum MyPlatform { android, ios, fuchsia, windows, macos, linux, web, unknown }
@@ -43,17 +45,11 @@ class MyUtils {
   }
 
   ///C语言 字符 与 dart 字符串相互转换
-  // static String? toString(Pointer<Int8> str) {
-  //
-  //   return str.value.cast<utf8>().toDartString() ;
-  // }
+  static Pointer<Int8> toCStr(String str) {
+    return str.toNativeUtf8().cast<Int8>();
+  }
 
-  // static Pointer<Uint8> toCPtr(String string) {
-  //   Uint8List units = Utf8Encoder().convert(string) ;
-  //
-  //
-  //
-  //
-  //   return utf8.decode(string.codeUnits)
-  // }
+  static String toDartStr(Pointer<Int8> cStr) {
+    return cStr.cast<Utf8>().toDartString();
+  }
 }

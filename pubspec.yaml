@@ -12,6 +12,8 @@ dependencies:
     sdk: flutter
   #网络请求库
   dio: ^4.0.4
+  #dart 类型 与 C 类型互转
+  ffi: ^2.1.0
 
 dev_dependencies:
   flutter_test:
