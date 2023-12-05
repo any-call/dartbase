@@ -1,5 +1,5 @@
 import 'dart:core';
-import 'dart:ffi';
+import 'dart:ffi' as ffi;
 import 'dart:io';
 import 'dart:ui' as ui;
 
@@ -46,11 +46,11 @@ class MyUtils {
   }
 
   ///C语言 字符 与 dart 字符串相互转换
-  static Pointer<Int8> toCStr(String str) {
-    return str.toNativeUtf8().cast<Int8>();
+  static ffi.Pointer<ffi.Int8> toCStr(String str) {
+    return str.toNativeUtf8().cast<ffi.Int8>();
   }
 
-  static String toDartStr(Pointer<Int8> cStr) {
+  static String toDartStr(ffi.Pointer<ffi.Int8> cStr) {
     return cStr.cast<Utf8>().toDartString();
   }
 }
