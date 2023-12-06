@@ -46,11 +46,11 @@ class MyUtils {
   }
 
   ///C语言 字符 与 dart 字符串相互转换
-  static ffi.Pointer<ffi.Int8> toCStr(String str) {
-    return str.toNativeUtf8().cast<ffi.Int8>();
+  static ffi.Pointer<ffi.Char> toCStr(String str) {
+    return str.toNativeUtf8().cast<ffi.Char>();
   }
 
-  static String toDartStr(ffi.Pointer<ffi.Int8> cStr) {
+  static String toDartStr(ffi.Pointer<ffi.Char> cStr) {
     return cStr.cast<Utf8>().toDartString();
   }
 }
