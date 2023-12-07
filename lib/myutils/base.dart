@@ -54,6 +54,15 @@ class MyUtils {
     return cStr.cast<Utf8>().toDartString();
   }
 
+  //space
+  static Widget spaceWidth(double v) {
+    return SizedBox(width: v);
+  }
+
+  static Widget spaceHeight(double v) {
+    return SizedBox(height: v);
+  }
+
   ///路由push / pop
   static push(BuildContext context, Widget widget) {
     Navigator.of(context)
