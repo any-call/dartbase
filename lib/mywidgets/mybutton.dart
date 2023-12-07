@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 extension OutlinedButtonExtension on OutlinedButton {
-  static OutlinedButton outlineBtn(
+  static OutlinedButton myOutlineBtn(
       {Key? key,
       String label = "",
       FontStyle? fontStyle,
