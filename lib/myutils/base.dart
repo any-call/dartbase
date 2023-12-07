@@ -53,4 +53,20 @@ class MyUtils {
   static String toDartStr(ffi.Pointer<ffi.Char> cStr) {
     return cStr.cast<Utf8>().toDartString();
   }
+
+  ///路由push / pop
+  static push(BuildContext context, Widget widget) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (BuildContext context) {
+      return widget;
+    }));
+  }
+
+  static pushWithName(BuildContext context, String name, {Object? arguments}) {
+    Navigator.of(context).pushNamed(name, arguments: arguments);
+  }
+
+  static pop(BuildContext context, {Object? ret}) {
+    Navigator.of(context).pop([ret]);
+  }
 }
