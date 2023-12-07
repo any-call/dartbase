@@ -1,5 +1,37 @@
 import 'package:flutter/material.dart';
 
+extension OutlinedButtonExtension on OutlinedButton {
+  static OutlinedButton outlineBtn(
+      {Key? key,
+      String label = "",
+      FontStyle? fontStyle,
+      FontWeight? fontWeight,
+      double fontSize = 14,
+      VoidCallback? onPressed,
+      VoidCallback? onLongPress,
+      VoidCallback? onHover,
+      VoidCallback? onFocusChange,
+      Color? foregroundColor,
+      Color? backGroundColor,
+      Color? hoverColor}) {
+    return OutlinedButton(
+        onPressed: onPressed,
+        style: ButtonStyle(
+          foregroundColor: MaterialStateProperty.all(foregroundColor),
+          backgroundColor: MaterialStateProperty.all(backGroundColor),
+          overlayColor: MaterialStateProperty.all(hoverColor),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontStyle: fontStyle,
+            fontSize: fontSize,
+            fontWeight: fontWeight,
+          ),
+        ));
+  }
+}
+
 class MyButton {
   ///OutlinedButton
   static Widget outlineBtn(
