@@ -12,4 +12,9 @@ extension MyWidget on Widget {
 
     return this;
   }
+
+  /// only row/cloumn 的子元素可用
+  Expanded SetExpand({int flex = 1}) {
+    return Expanded(flex: flex, child: this);
+  }
 }
