@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:file_selector/file_selector.dart';
+
 class MyFile {
   //检测文件件
   static bool isFolder(String path) {
@@ -33,5 +35,14 @@ class MyFile {
   static Future readFileAsString(String path) {
     final file = File(path);
     return file.readAsString();
+  }
+
+  ///文件选择框
+  static Future<XFile?> selectFile(
+    List<String> listExt, {
+    String? label,
+  }) {
+    XTypeGroup typeGroup = XTypeGroup(label: label, extensions: listExt);
+    return openFile(acceptedTypeGroups: <XTypeGroup>[typeGroup]);
   }
 }
