@@ -3,18 +3,6 @@ import 'package:flutter/material.dart';
 enum MyButtonType { elevate, text, outlined }
 
 extension MyButton on ButtonStyleButton {
-  Widget SetFixSize(double? width, double? heigh) {
-    if (width != null && heigh != null) {
-      return Container(width: width, height: heigh, child: this);
-    } else if (width != null) {
-      return Container(width: width, child: this);
-    } else if (heigh != null) {
-      return Container(height: heigh, child: this);
-    }
-
-    return this;
-  }
-
   static ButtonStyleButton textBtn(MyButtonType type,
       {Key? key,
       String label = "",
