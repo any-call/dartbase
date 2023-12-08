@@ -1,12 +1,13 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 extension MyWidget on Widget {
-  SizedBox SetSizebox({Key? key, double? width, double? height}) {
+  SizedBox setSizebox({Key? key, double? width, double? height}) {
     return SizedBox(key: key, width: width, height: height, child: this);
   }
 
   ///设置对齐
-  Align SetAlign(Alignment alignment, {Key? key}) {
+  Align setAlign(Alignment alignment, {Key? key}) {
     return Align(
       key: key,
       alignment: alignment,
@@ -15,22 +16,52 @@ extension MyWidget on Widget {
   }
 
   ///设置外边距
-  Padding SetPadding(EdgeInsets edgeInsets, {Key? key}) {
+  Padding setPadding(EdgeInsets edgeInsets, {Key? key}) {
     return Padding(key: key, padding: edgeInsets, child: this);
   }
 
   ///设置Center
-  Center SetCenter({Key? key}) {
+  Center setCenter({Key? key}) {
     return Center(key: key, child: this);
   }
 
   /// only row/cloumn 的子元素可用
-  Expanded SetExpand({Key? key, int flex = 1}) {
+  Expanded setExpand({Key? key, int flex = 1}) {
     return Expanded(key: key, flex: flex, child: this);
   }
 
+  setSingleChildScrollView({
+    Key? key,
+    Axis scrollDirection = Axis.vertical,
+    bool reverse = false,
+    EdgeInsetsGeometry? padding,
+    bool? primary,
+    ScrollPhysics? physics,
+    ScrollController? controller,
+    DragStartBehavior dragStartBehavior = DragStartBehavior.start,
+    Clip clipBehavior = Clip.hardEdge,
+    String? restorationId,
+    ScrollViewKeyboardDismissBehavior keyboardDismissBehavior =
+        ScrollViewKeyboardDismissBehavior.manual,
+  }) {
+    return SingleChildScrollView(
+      key: key,
+      scrollDirection: scrollDirection,
+      reverse: reverse,
+      padding: padding,
+      primary: primary,
+      physics: physics,
+      controller: controller,
+      dragStartBehavior: dragStartBehavior,
+      clipBehavior: clipBehavior,
+      restorationId: restorationId,
+      keyboardDismissBehavior: keyboardDismissBehavior,
+      child: this,
+    );
+  }
+
   //设置容器
-  Container SetContainer(
+  Container setContainer(
       {Key? key,
       AlignmentGeometry? alignment,
       AlignmentGeometry? transformAlignment,
