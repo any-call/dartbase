@@ -45,18 +45,20 @@ extension MyWidget on Widget {
       Matrix4? transform,
       Clip clipBehavior = Clip.none}) {
     return Container(
-        key: key,
-        alignment: alignment,
-        transformAlignment: transformAlignment,
-        padding: padding,
-        margin: margin,
-        color: color,
-        decoration: decoration,
-        foregroundDecoration: foregroundDecoration,
-        width: width,
-        height: height,
-        constraints: constraints,
-        transform: transform,
-        clipBehavior: clipBehavior);
+      key: key,
+      alignment: alignment,
+      transformAlignment: transformAlignment,
+      padding: padding,
+      margin: margin,
+      color: color,
+      decoration: decoration,
+      foregroundDecoration: foregroundDecoration,
+      width: width,
+      height: height,
+      constraints: constraints,
+      transform: transform,
+      clipBehavior: clipBehavior,
+      child: this,
+    );
   }
 }
