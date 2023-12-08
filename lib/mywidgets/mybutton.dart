@@ -15,7 +15,7 @@ extension MyButton on ButtonStyleButton {
     return this;
   }
 
-  static ButtonStyleButton myTextBtn(MyButtonType type,
+  static ButtonStyleButton textBtn(MyButtonType type,
       {Key? key,
       String label = "",
       FontStyle? fontStyle,
@@ -68,7 +68,7 @@ extension MyButton on ButtonStyleButton {
             fontStyle: fontStyle, fontWeight: fontWeight, fontSize: fontSize));
   }
 
-  static ButtonStyleButton myIconLabelBtn(MyButtonType type, IconData icon,
+  static ButtonStyleButton iconLabelBtn(MyButtonType type, IconData icon,
       {Key? key,
       String label = "",
       FontStyle? fontStyle,
