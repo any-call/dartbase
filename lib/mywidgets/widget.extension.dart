@@ -30,7 +30,7 @@ extension MyWidget on Widget {
     return Expanded(key: key, flex: flex, child: this);
   }
 
-  setSingleChildScrollView({
+  SingleChildScrollView setSingleChildScrollView({
     Key? key,
     Axis scrollDirection = Axis.vertical,
     bool reverse = false,
